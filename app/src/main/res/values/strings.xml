@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">CrazyPuzzle</string>
+    <string name="your_puzzle">Your Puzzle</string>
+    <string name="btn_upload">Upload Image</string>
 </resources>
