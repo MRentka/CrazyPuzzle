@@ -4,13 +4,12 @@ import android.app.Activity
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.view.View
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_main.*
-import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -20,6 +19,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnCreatePuzzle: ImageButton
     private lateinit var lblPreview: TextView
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -28,6 +28,7 @@ class MainActivity : AppCompatActivity() {
         btnUpload = btn_upload
         btnCreatePuzzle = btn_create_puzzle
         lblPreview = lbl_preview
+        imgDisplay = imgview_display
 
         // Set all required Listeners to corresponding Elements
         /*
@@ -48,8 +49,11 @@ class MainActivity : AppCompatActivity() {
             startActivityForResult(intent, IMAGE_REQUESTED);
         }
         btnCreatePuzzle.setOnClickListener() {
-            val intent = Intent(this, CreatePuzzle::class.java).apply{}
-            startActivity(intent)
+            val intent = Intent(this, UploadImageActivity::class.java).apply{}
+            if(imgDisplay.visibility == View.VISIBLE) startActivity(intent) else {
+                Snackbar.make(main_constraint_layout, R.string.snackbar_image_not_uploaded, Snackbar.LENGTH_SHORT)
+                    .show();
+            }
         }
     }
 
@@ -63,14 +67,15 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         if(requestCode == IMAGE_REQUESTED && resultCode == Activity.RESULT_OK) {
-            imgDisplay = imgview_display
             imgDisplay.setImageURI(data?.data)
+            imgDisplay.visibility = View.VISIBLE
             togglePreviewText()
         }
     }
 
-    fun togglePreviewText() {
-        if(imgDisplay != null) lblPreview.visibility = View.INVISIBLE
+    private fun togglePreviewText() {
+        if(imgDisplay.visibility == View.VISIBLE) lblPreview.visibility = View.INVISIBLE
+        else lblPreview.visibility = View.INVISIBLE
     }
 
     // Define all Constants which are used in this Activity
